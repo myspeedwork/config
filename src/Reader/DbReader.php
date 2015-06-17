@@ -15,7 +15,7 @@ use Speedwork\Core\Registry;
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
-class DbReader implements ConfigReaderInterface
+class DbReader implements ReaderInterface
 {
     /**
      * The path this reader finds files on.

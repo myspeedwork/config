@@ -23,7 +23,7 @@ use Exception;
  * Files compatible with PhpReader should define a `$config` variable, that
  * contains all of the configuration data contained in the file.
  */
-class PhpReader implements ConfigReaderInterface
+class PhpReader implements ReaderInterface
 {
     /**
      * The path this reader finds files on.

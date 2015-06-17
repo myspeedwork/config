@@ -50,7 +50,7 @@ use Speedwork\Util\Hash;
  *
  * @see http://php.net/parse_ini_file
  */
-class IniReader implements ConfigReaderInterface
+class IniReader implements ReaderInterface
 {
     /**
      * The path to read ini files from.
