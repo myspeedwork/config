@@ -10,7 +10,7 @@
  */
 namespace Speedwork\Config;
 
-use Speedwork\Util\Hash;
+use Cake\Utility\Hash;
 use Speedwork\Core\Registry;
 use Speedwork\Database\Database;
 use Speedwork\Config\Reader\PhpReader;

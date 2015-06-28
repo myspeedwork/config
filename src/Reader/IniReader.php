@@ -10,8 +10,8 @@
  */
 namespace Speedwork\Config\Reader;
 
+use Cake\Utility\Hash;
 use Exception;
-use Speedwork\Util\Hash;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
