@@ -8,23 +8,30 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Speedwork\Config\Reader;
+namespace Speedwork\Config\Engine;
 
-use Exception;
+use Cake\Core\Configure\ConfigEngineInterface;
+use Speedwork\Core\Registry;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
-
-/**
- * PHP Reader allows Configure to load configuration values from
- * files containing simple PHP arrays.
- *
- * Files compatible with PhpReader should define a `$config` variable, that
- * contains all of the configuration data contained in the file.
- */
-class PhpReader implements ReaderInterface
+class DbConfig implements ConfigEngineInterface
 {
+    /**
+     * The path this reader finds files on.
+     *
+     * @var string
+     */
+    protected $database = null;
+
+    /**
+     * site id to get the settings.
+     *
+     * @var int
+     */
+    protected static $_getsite = 1;
+
     /**
      * The path this reader finds files on.
      *
@@ -37,12 +44,14 @@ class PhpReader implements ReaderInterface
      *
      * @param string $path The path to read config files from.  Defaults to APP . 'Config' . DS
      */
-    public function __construct($path = null)
+    public function __construct($database = null)
     {
-        if (!$path) {
-            $path = APP.'config'.DS;
+        $this->database = $database;
+
+        $siteid = Registry::get('configid');
+        if ($siteid) {
+            self::$_getsite = $siteid;
         }
-        $this->_path = $path;
     }
 
     /**
@@ -59,34 +68,25 @@ class PhpReader implements ReaderInterface
      * @throws ConfigureException when files don't exist or they don't contain `$config`.
      *                            Or when files contain '..' as this could lead to abusive reads.
      */
-    public function read($key)
+    public function read($key = null)
     {
-        if (strpos($key, '..') !== false) {
-            throw new Exception(_e('Cannot load configuration files with ../ in them.'));
-        }
-        if (substr($key, -4) === '.php') {
-            $key = substr($key, 0, -4);
-        }
-
-        if (strpos($key, 'system.') !== false) {
-            $key = str_replace('system.', '', $key);
-            $key = SYS.$key;
-        } else {
-            $key = APP.$key;
-        }
-
-        $file = $key;
-        $file .= '.php';
-
-        if (!is_file($file)) {
-            if (!is_file(substr($file, 0, -4))) {
-                throw new ConfigureException(_e('Could not load configuration files: %s or %s', [$file, substr($file, 0, -4)]));
-            }
+        if ($this->database === null) {
+            return [];
         }
 
         $_config = [];
 
-        include $file;
+        $res = $this->database->find('#__core_options', 'all', [
+            'conditions' => ['fksiteid' => self::$_getsite],
+            'cache'      => 'daily',
+        ]);
+
+        foreach ($res as $data) {
+            $value = $data['option_value'];
+            $check = @json_decode($value, true);
+
+            $_config[$data['option_name']] = ($check == null || $check == false) ? $value : $check;
+        }
 
         return $_config;
     }
@@ -100,10 +100,12 @@ class PhpReader implements ReaderInterface
      *
      * @return int Bytes saved.
      */
-    public function dump($filename, $data)
+    public function dump($key, array $data)
     {
-        $contents = '<?php'."\n".'$_config = '.var_export($data, true).';';
+        $contents = '<?php'."\n".'return '.var_export($data, true).';';
 
-        return file_put_contents($this->_path.$filename, $contents);
+        $filename = $this->_getFilePath($key);
+
+        return file_put_contents($filename, $contents);
     }
 }
