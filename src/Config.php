@@ -5,7 +5,7 @@ namespace Speedwork\Config;
 use ArrayAccess;
 use Speedwork\Util\Arr;
 
-class Repository implements ArrayAccess, RepositoryInterface
+class Config implements ArrayAccess,ConfigInterface
 {
     /**
      * All of the configuration items.
