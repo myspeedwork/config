@@ -84,7 +84,7 @@ class DbConfig implements ConfigEngineInterface
 
         foreach ($res as $data) {
             $value = $data['option_value'];
-            $check = @json_decode($value, true);
+            $check = json_decode($value, true);
 
             $_config[$data['option_name']] = ($check == null || $check == false) ? $value : $check;
         }
