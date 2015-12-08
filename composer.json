@@ -1,7 +1,7 @@
 {
     "name": "speedwork/config",
     "type": "library",
-    "description": "Speedwork Config Modules",
+    "description": "Speedwork Config Module",
     "license": "MIT",
     "authors": [
         {
@@ -10,7 +10,14 @@
         }
     ],
     "require": {
-        "php" : ">=5.4"
+        "php" : ">=5.5",
+        "speedwork/container" : "dev-master",
+        "speedwork/util" : "dev-master",
+        "symfony/config" : "~2.7|^3.0",
+        "symfony/finder" : "~2.7|^3.0"
+    },
+    "suggests" : {
+        "symfony/yaml"  : "~2.7|^3.0"
     },
     "autoload" : {
         "psr-4": { "Speedwork\\Config\\": "src" }
