@@ -13,7 +13,7 @@ class EnvironmentNormalizer implements NormalizerInterface
      */
     public function normalize($value)
     {
-        $result = preg_replace_callback('{##|#([A-Z0-9_]+)#}', [$this, 'callback'], $value, -1, $count);
+        $result = preg_replace_callback('{##|#([A-Z0-9_:]+)#}', [$this, 'callback'], $value, -1, $count);
 
         return $count ? $result : $value;
     }
@@ -29,10 +29,12 @@ class EnvironmentNormalizer implements NormalizerInterface
             return $matches[0];
         }
 
-        if (false !== $env = getenv($matches[1])) {
+        list($match, $default) = explode(':', $matches[1]);
+
+        if (false !== $env = getenv($match)) {
             return $env;
         };
 
-        return $matches[0];
+        return $default;
     }
 }

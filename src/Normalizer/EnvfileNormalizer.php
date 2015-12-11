@@ -39,13 +39,13 @@ class EnvfileNormalizer extends EnvironmentNormalizer
             return;
         }
 
-        $this->env = parse_ini_file($file, false, INI_SCANNER_RAW) ?: [];
+        $this->env = parse_ini_string(file_get_contents($file), false, INI_SCANNER_RAW) ?: [];
         $this->env = array_change_key_case($this->env, CASE_UPPER);
     }
 
     protected function locate()
     {
-        foreach (['Envfile', 'Envfile.dist', '.env'] as $file) {
+        foreach (['.env','Envfile', 'Envfile.dist'] as $file) {
             try {
                 return $this->locator->locate($file);
             } catch (\InvalidArgumentException $e) {

@@ -3,6 +3,7 @@
 namespace Speedwork\Config;
 
 use Speedwork\Config\Loader\CacheLoader;
+use Speedwork\Config\Loader\EnvFileLoader;
 use Speedwork\Config\Loader\IniFileLoader;
 use Speedwork\Config\Loader\JsonFileLoader;
 use Speedwork\Config\Loader\NormalizerLoader;
@@ -10,6 +11,7 @@ use Speedwork\Config\Loader\PhpFileLoader;
 use Speedwork\Config\Loader\ProcessorLoader;
 use Speedwork\Config\Loader\YamlFileLoader;
 use Speedwork\Config\Normalizer\ChainNormalizer;
+use Speedwork\Config\Normalizer\ContainerNormalizer;
 use Speedwork\Config\Normalizer\EnvfileNormalizer;
 use Speedwork\Config\Normalizer\EnvironmentNormalizer;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -125,6 +127,7 @@ final class LoaderBuilder
             $this->resolver->addLoader(new YamlFileLoader($this->locator, $this->resources));
         }
 
+        $this->resolver->addLoader(new EnvFileLoader($this->locator, $this->resources));
         $this->resolver->addLoader(new JsonFileLoader($this->locator, $this->resources));
         $this->resolver->addLoader(new PhpFileLoader($this->locator, $this->resources));
         $this->resolver->addLoader(new IniFileLoader($this->locator, $this->resources));
@@ -136,6 +139,7 @@ final class LoaderBuilder
     {
         $this->normalizerConfigured = true;
 
+        $this->normalizer->add(new ContainerNormalizer($this->app));
         $this->normalizer->add(new EnvironmentNormalizer());
         $this->normalizer->add(new EnvfileNormalizer($this->locator));
 
@@ -163,7 +167,7 @@ final class LoaderBuilder
      *
      * @param array $config
      */
-    public function load($paths = [], $associate = false)
+    public function load($paths = [], $associate = null)
     {
         $loader = $this->build();
 

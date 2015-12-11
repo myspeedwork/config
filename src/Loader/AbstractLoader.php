@@ -20,14 +20,18 @@ abstract class AbstractLoader extends FileLoader
         $this->resources = $resources;
     }
 
-    public function load($resource, $associate = false)
+    public function load($resource, $associate = null)
     {
         $resource = $this->locator->locate($resource);
         $this->resources->add(new FileResource($resource));
 
         if ($associate) {
-            $ext      = strrchr($resource, '.');
-            $filename = basename($resource, $ext);
+            if (is_string($associate)) {
+                $filename = $associate;
+            } else {
+                $ext      = strrchr($resource, '.');
+                $filename = basename($resource, $ext);
+            }
 
             return [
                 $filename => $this->parse($this->read($resource), $resource),

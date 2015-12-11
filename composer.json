@@ -11,8 +11,6 @@
     ],
     "require": {
         "php" : ">=5.5",
-        "speedwork/container" : "dev-master",
-        "speedwork/util" : "dev-master",
         "symfony/config" : "~2.7|^3.0",
         "symfony/finder" : "~2.7|^3.0"
     },
