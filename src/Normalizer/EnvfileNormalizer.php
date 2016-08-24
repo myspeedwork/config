@@ -45,7 +45,7 @@ class EnvfileNormalizer extends EnvironmentNormalizer
 
     protected function locate()
     {
-        foreach (['.env','Envfile', 'Envfile.dist'] as $file) {
+        foreach (['.env', 'Envfile', 'Envfile.dist'] as $file) {
             try {
                 return $this->locator->locate($file);
             } catch (\InvalidArgumentException $e) {

@@ -2,8 +2,6 @@
 
 namespace Speedwork\Config\Normalizer;
 
-/**
- */
 class EnvironmentNormalizer implements NormalizerInterface
 {
     /**
@@ -33,7 +31,7 @@ class EnvironmentNormalizer implements NormalizerInterface
 
         if (false !== $env = getenv($match)) {
             return $env;
-        };
+        }
 
         return $default;
     }
