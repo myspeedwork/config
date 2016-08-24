@@ -4,8 +4,6 @@ namespace Speedwork\Config\Normalizer;
 
 use Speedwork\Container\Container;
 
-/**
- */
 class ContainerNormalizer implements NormalizerInterface
 {
     private $di;

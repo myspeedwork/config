@@ -2,8 +2,6 @@
 
 namespace Speedwork\Config\Normalizer;
 
-/**
- */
 class ChainNormalizer implements NormalizerInterface
 {
     private $normalizers = [];
