@@ -113,11 +113,11 @@ final class LoaderBuilder
 
     public function build()
     {
-        if (false == $this->resolverConfigured) {
+        if (false === $this->resolverConfigured) {
             $this->addDefaultLoaders();
         }
 
-        if (false == $this->normalizerConfigured) {
+        if (false === $this->normalizerConfigured) {
             $this->addDefaultNormalizers();
         }
 
