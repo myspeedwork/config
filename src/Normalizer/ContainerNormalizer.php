@@ -15,14 +15,14 @@ use Speedwork\Container\Container;
 
 class ContainerNormalizer implements NormalizerInterface
 {
-    private $di;
+    private $app;
 
     /**
-     * @param Container $di
+     * @param Container $app
      */
-    public function __construct(Container $di)
+    public function __construct(Container $app)
     {
-        $this->di = $di;
+        $this->app = $app;
     }
 
     /**
@@ -33,7 +33,7 @@ class ContainerNormalizer implements NormalizerInterface
     public function normalize($value)
     {
         if (preg_match('{^%([a-z0-9_.]+)%$}', $value, $match)) {
-            return isset($this->di[$match[1]]) ? $this->di[$match[1]] : $match[0];
+            return isset($this->app[$match[1]]) ? $this->app[$match[1]] : $match[0];
         }
 
         $result = preg_replace_callback('{%%|%([a-z0-9_.]+)%}', [$this, 'callback'], $value, -1, $count);
@@ -52,6 +52,6 @@ class ContainerNormalizer implements NormalizerInterface
             return '%%';
         }
 
-        return isset($this->di[$matches[1]]) ? $this->di[$matches[1]] : $matches[0];
+        return isset($this->app[$matches[1]]) ? $this->app[$matches[1]] : $matches[0];
     }
 }
