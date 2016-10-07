@@ -23,23 +23,54 @@ class EnvFileLoader extends AbstractLoader
         $env = parent::load($resource, $associate);
         $env = array_change_key_case($env, CASE_UPPER);
 
+        $data = [];
         if ($associate) {
             foreach ($env as $values) {
                 foreach ($values as $name => $value) {
-                    putenv("$name=$value");
-                    $_ENV[$name]    = $value;
-                    $_SERVER[$name] = $value;
+                    $data[$name] = $this->convert($value);
                 }
             }
         } else {
             foreach ($env as $name => $value) {
-                putenv("$name=$value");
-                $_ENV[$name]    = $value;
-                $_SERVER[$name] = $value;
+                $data[$name] = $this->convert($value);
             }
         }
 
+        foreach ($data as $name => $value) {
+            putenv("$name=$value");
+            $_ENV[$name]    = $value;
+            $_SERVER[$name] = $value;
+        }
+
         return $env;
+    }
+
+    /**
+     * Convert env variables to proper data types.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    protected function convert($value)
+    {
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+            case 'false':
+            case '(false)':
+                return false;
+            case 'empty':
+            case '(empty)':
+                return '';
+            case 'null':
+            case '(null)':
+                return;
+        }
+        $value = trim($value, '"');
+
+        return $value;
     }
 
     /**
